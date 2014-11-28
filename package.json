@@ -1,6 +1,6 @@
 {
   "name": "spooky-router",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "The scariest router ever.",
   "main": "index.js",
   "scripts": {
@@ -28,7 +28,7 @@
     "url-pattern": "~0.6.0",
     "mixes": "~1.0.4",
     "dom-event": "0.0.1",
-    "spooky-view-manager": "0.0.1",
+    "spooky-view-manager": "^1.0.0",
     "urlresolve": "0.0.6",
     "route-parser": "0.0.2",
     "signals": "~1.0.0"
@@ -37,6 +37,6 @@
     "hbsfy": "~2.2.0",
     "6to5-browserify": "~1.3.0",
     "handlebars": "~2.0.0",
-    "spooky-element": "~0.0.4"
+    "spooky-element": "^1.0.0"
   }
 }
