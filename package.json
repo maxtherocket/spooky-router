@@ -1,6 +1,6 @@
 {
   "name": "spooky-router",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "The scariest router ever.",
   "main": "index.js",
   "scripts": {

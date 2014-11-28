@@ -16,6 +16,9 @@ var SpookyRouter = function(container, initRoutes, model, overlapViews){
 
     this.updateURL = true;
 
+    this.onRouteNotFound = new Signal();
+    this.onRouteChanged = new Signal();
+
     // init routes
     if (initRoutes && _.isFunction(initRoutes)){
         initRoutes.call(this);
@@ -28,8 +31,13 @@ mixes(SpookyRouter, {
         watchURL = (watchURL!==false);
         if (watchURL){
             on(window, 'hashchange', this.hashChangeHandler.bind(this));
-            // Detect initial path
-            this.hashChangeHandler();
+            // check if we have an empty hash string
+            if (this.getHashPath() === ''){
+                this.setHashPath('/');
+            } else {
+                // Detect initial path
+                this.hashChangeHandler();
+            }
         }
     },
 
@@ -102,9 +110,16 @@ mixes(SpookyRouter, {
                 return false;
             }
         }.bind(this));
+        // No match
+        this.onRouteNotFound.dispatch();
     },
 
     pathMatched: function(match, route){
+        // set current route        
+        this.currentRoute = route;
+        this.onRouteChanged.dispatch(route);
+
+        // Change view
         var View = route.config.view;
         var model = this.model[route.name];
         var instance = new View(model);
