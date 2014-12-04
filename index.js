@@ -5,12 +5,12 @@ var on = require('dom-event');
 var ViewManager = require('spooky-view-manager');
 var Route = require('route-parser');
 var Signal = require('signals').Signal;
+var model = require('spooky-model');
 
-var SpookyRouter = function(container, initRoutes, model, overlapViews){
+var SpookyRouter = function(container, initRoutes, overlapViews){
 
     this.container = container;
     this.routes = {};
-    this.model = model || {};
 
     this.viewManager = new ViewManager(container, overlapViews);
 
@@ -121,7 +121,7 @@ mixes(SpookyRouter, {
 
         // Change view
         var View = route.config.view;
-        var model = this.model[route.name];
+        var model = model.getContent[route.name];
         var instance = new View(model);
         this.viewManager.changeView(instance);
     }
