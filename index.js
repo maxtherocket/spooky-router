@@ -124,6 +124,10 @@ mixes(SpookyRouter, {
         var model = model.getContent[route.name];
         var instance = new View(model);
         this.viewManager.changeView(instance);
+    },
+
+    resize: function(w,h){
+        this.viewManager.resize(w,h);
     }
 
 });
