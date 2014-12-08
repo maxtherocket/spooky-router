@@ -19,6 +19,9 @@ var SpookyRouter = function(container, initRoutes, overlapViews){
     this.onRouteNotFound = new Signal();
     this.onRouteChanged = new Signal();
 
+    this.width = 0;
+    this.height = 0;
+
     // init routes
     if (initRoutes && _.isFunction(initRoutes)){
         initRoutes.call(this);
@@ -118,15 +121,17 @@ mixes(SpookyRouter, {
         // set current route        
         this.currentRoute = route;
         this.onRouteChanged.dispatch(route);
-
         // Change view
         var View = route.config.view;
-        var model = model.getContent[route.name];
-        var instance = new View(model);
+        var data = model.getContent(route.name);
+        var instance = new View(data);
+        instance.resize(this.width, this.height);
         this.viewManager.changeView(instance);
     },
 
     resize: function(w,h){
+        this.width = w;
+        this.height = h;
         this.viewManager.resize(w,h);
     }
 

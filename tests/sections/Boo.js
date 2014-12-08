@@ -2,9 +2,9 @@ var SpookyEl = require('spooky-element');
 
 class Boo extends SpookyEl {
 
-    constructor(){
+    constructor(data){
         this.template = require('../templates/Boo.hbs');
-        super();
+        super(data);
     }
 
 }

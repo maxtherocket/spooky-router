@@ -5,7 +5,9 @@ var initRoutes = function(){
     this.add( 'spooky', '/spooky', {view:require('./sections/Spooky'), updateURL:true} );
 }
 
-var router = new Router(document.body, initRoutes, {});
+require('spooky-model').init( {boo:{greeting:'BOO!'}} );
+
+var router = new Router(document.body, initRoutes);
 router.init();
 
 // var generated = router.generatePath('boo', {boo:'AAA', baa:'BBB'});
