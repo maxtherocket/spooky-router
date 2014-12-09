@@ -6,41 +6,41 @@ var Route = require('route-parser');
 var Signal = require('signals').Signal;
 var model = require('spooky-model');
 
-var SpookyRouter = function(container, initRoutes, overlapViews){
-
-    this.container = container;
-    this.routes = {};
-
-    this.viewManager = new ViewManager(container, overlapViews);
-
-    this.updateURL = true;
+var SpookyRouter = function(){
 
     this.onRouteNotFound = new Signal();
     this.onRouteChanged = new Signal();
-
+    
     this.width = 0;
     this.height = 0;
 
-    // init routes
-    if (initRoutes && _.isFunction(initRoutes)){
-        initRoutes.call(this);
-    }
 }
 
 mixes(SpookyRouter, {
 
-    init: function(watchURL){
-        watchURL = (watchURL!==false);
-        if (watchURL){
-            on(window, 'hashchange', this.hashChangeHandler.bind(this));
-            // check if we have an empty hash string
-            if (this.getHashPath() === ''){
-                this.setHashPath('/');
-            } else {
-                // Detect initial path
-                this.hashChangeHandler();
-            }
+    init: function(container, initRoutes, overlapViews){
+
+        this.container = container;
+        this.routes = {};
+
+        this.viewManager = new ViewManager(container, overlapViews);
+
+        this.updateURL = true;
+
+        // init routes
+        if (initRoutes && _.isFunction(initRoutes)){
+            initRoutes.call(this);
         }
+
+        on(window, 'hashchange', this.hashChangeHandler.bind(this));
+        // check if we have an empty hash string
+        if (this.getHashPath() === ''){
+            this.setHashPath('/');
+        } else {
+            // Detect initial path
+            this.hashChangeHandler();
+        }
+
         return this;
     },
 
@@ -145,4 +145,4 @@ mixes(SpookyRouter, {
 
 });
 
-module.exports = SpookyRouter;
+module.exports = new SpookyRouter();

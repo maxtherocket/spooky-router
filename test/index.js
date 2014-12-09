@@ -1,4 +1,4 @@
-var Router = require('../index');
+var router = require('../index');
 
 var initRoutes = function(){
     this.add( 'boo', '/', {view:require('./sections/Boo'), updateURL:true} );
@@ -7,8 +7,7 @@ var initRoutes = function(){
 
 require('spooky-model').init( {boo:{greeting:'BOO!'}} );
 
-var router = new Router(document.body, initRoutes);
-router.init();
+router.init(document.body, initRoutes);
 
 // var generated = router.generatePath('boo', {boo:'AAA', baa:'BBB'});
 // console.log('generated: ', generated);
