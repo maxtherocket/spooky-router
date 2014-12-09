@@ -1,5 +1,4 @@
 var mixes = require('mixes');
-var urlPattern = require('url-pattern');
 var _ = require('lodash');
 var on = require('dom-event');
 var ViewManager = require('spooky-view-manager');
@@ -121,15 +120,21 @@ mixes(SpookyRouter, {
     },
 
     pathMatched: function(match, route){
+        if (route == this.currentRoute){
+            // The route is the same, meaning parameters have changed
+            this.currentView.paramsChanged(match);
+            return;
+        }
         // set current route        
         this.currentRoute = route;
-        this.onRouteChanged.dispatch(route);
+        this.onRouteChanged.dispatch(route, match);
         // Change view
         var View = route.config.view;
         var data = model.getContent(route.name);
-        var instance = new View(data);
-        instance.resize(this.width, this.height);
-        this.viewManager.changeView(instance);
+        this.currentView = new View(data);
+        this.currentView.resize(this.width, this.height);
+        this.currentView.paramsChanged(match);
+        this.viewManager.changeView(this.currentView);
     },
 
     resize: function(w,h){
