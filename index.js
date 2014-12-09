@@ -42,6 +42,7 @@ mixes(SpookyRouter, {
                 this.hashChangeHandler();
             }
         }
+        return this;
     },
 
     add: function(name, pattern, config){
@@ -53,6 +54,8 @@ mixes(SpookyRouter, {
         }
 
         this.routes[name] = route;
+
+        return this;
 
     },
 
