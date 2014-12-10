@@ -42,6 +42,7 @@ mixes(SpookyRouter, {
         }
 
         return this;
+        
     },
 
     add: function(name, pattern, config){
@@ -145,4 +146,4 @@ mixes(SpookyRouter, {
 
 });
 
-module.exports = new SpookyRouter();
+module.exports = SpookyRouter;
