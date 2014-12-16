@@ -18,10 +18,13 @@ var SpookyRouter = function(){
 
 mixes(SpookyRouter, {
 
-    init: function(container, initRoutes, overlapViews){
+    init: function(container, initRoutes, width, height, overlapViews){
 
         this.container = container;
         this.routes = {};
+
+        this.width = width;
+        this.height = height;
 
         this.viewManager = new ViewManager(container, overlapViews);
 
@@ -141,6 +144,7 @@ mixes(SpookyRouter, {
     resize: function(w,h){
         this.width = w;
         this.height = h;
+
         this.viewManager.resize(w,h);
     }
 
