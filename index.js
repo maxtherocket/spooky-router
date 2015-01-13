@@ -5,11 +5,13 @@ var ViewManager = require('spooky-view-manager');
 var Route = require('route-parser');
 var Signal = require('signals').Signal;
 var model = require('spooky-model');
+var SpookyElement = require('spooky-element');
 
 var SpookyRouter = function(){
 
     this.onRouteNotFound = new Signal();
     this.onRouteChanged = new Signal();
+    this.onParamsChanged = new Signal();
     
     this.width = 0;
     this.height = 0;
@@ -133,18 +135,24 @@ mixes(SpookyRouter, {
         this.currentRoute = route;
         this.onRouteChanged.dispatch(route, match);
         // Change view
-        var View = route.config.view;
-        var data = model.getContent(route.name);
-        this.currentView = new View(data);
-        this.currentView.resize(this.width, this.height);
-        this.currentView.paramsChanged(match);
-        this.viewManager.changeView(this.currentView);
+        if (route.config.view){
+            var View = route.config.view;
+            if (View instanceof SpookyElement){
+                this.currentView = View;
+                this.currentView.paramsChanged(match);
+            } else {
+                var data = model.getContent(route.name);
+                this.currentView = new View(data);
+                this.currentView.resize(this.width, this.height);
+                this.currentView.paramsChanged(match);
+                this.viewManager.changeView(this.currentView);
+            }
+        }
     },
 
     resize: function(w,h){
         this.width = w;
         this.height = h;
-
         this.viewManager.resize(w,h);
     }
 

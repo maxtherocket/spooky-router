@@ -1,6 +1,6 @@
 {
   "name": "spooky-router",
-  "version": "1.6.8",
+  "version": "1.7.8",
   "description": "The scariest router ever.",
   "main": "index.js",
   "scripts": {
@@ -32,7 +32,8 @@
     "route-parser": "0.0.2",
     "signals": "~1.0.0",
     "domready": "~1.0.7",
-    "spooky-model": "^1.0.0"
+    "spooky-model": "^1.0.0",
+    "spooky-element": "^1.0.0"
   },
   "devDependencies": {
     "hbsfy": "~2.2.0",
