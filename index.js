@@ -142,7 +142,7 @@ mixes(SpookyRouter, {
                 this.currentView = View;
                 this.currentView.paramsChanged(match);
                 if (this.currentView != previousView){
-                    this.viewManager.changeView(this.currentView);
+                    this.viewManager.changeView(this.currentView, false);
                 }
             } else {
                 var data = model.getContent(route.name);
