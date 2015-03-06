@@ -131,7 +131,8 @@ mixes(SpookyRouter, {
             this.currentView.paramsChanged(match);
             return;
         }
-        // set current route        
+        // set current route
+        this.lastRoute = this.currentRoute;
         this.currentRoute = route;
         this.onRouteChanged.dispatch(route, match);
         // Change view
