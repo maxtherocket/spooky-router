@@ -31,7 +31,6 @@
   },
   "devDependencies": {
     "hbsfy": "~2.2.0",
-    "6to5-browserify": "~1.3.0",
     "handlebars": "~2.0.0",
     "spooky-element": "^1.0.0"
   }
