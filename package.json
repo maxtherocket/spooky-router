@@ -6,12 +6,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "browserify": {
-    "transform": [
-      "6to5-browserify",
-      "hbsfy"
-    ]
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/maxtherocket/spooky-router.git"
