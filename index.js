@@ -114,15 +114,19 @@ mixes(SpookyRouter, {
     },
 
     matchPath: function(path){
+        var matched = false;
         _.each(this.routes, function(route, index){
             var match = route.route.match(path);
             if (match){
+                matched = true;
                 this.pathMatched(match, route);
                 return false;
             }
         }.bind(this));
         // No match
-        this.onRouteNotFound.dispatch();
+        if (!matched){
+            this.onRouteNotFound.dispatch(path);
+        }
     },
 
     pathMatched: function(match, route){
