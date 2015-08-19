@@ -151,6 +151,8 @@ mixes(SpookyRouter, {
                 }
             } else {
                 var data = model.getContent(route.name);
+                data = data || {};
+                data = _.assign(data, route.config.data);
                 this.currentView = new View(data);
                 this.currentView.resize(this.width, this.height);
                 this.currentView.paramsChanged(match);
