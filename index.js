@@ -142,10 +142,12 @@ mixes(SpookyRouter, {
         // Change view
         if (route.config.view){
             var View = route.config.view;
+            var configParams = route.config.params || {};
+            var params = _.assign(configParams, match);
             if (View._spooky === true){
                 var previousView = this.currentView;
                 this.currentView = View;
-                this.currentView.paramsChanged(match);
+                this.currentView.paramsChanged(params);
                 if (this.currentView != previousView && !route.config.floatingView){
                     this.viewManager.changeView(this.currentView, false);
                 }
@@ -155,7 +157,7 @@ mixes(SpookyRouter, {
                 data = _.assign(data, route.config.data);
                 this.currentView = new View(data);
                 this.currentView.resize(this.width, this.height);
-                this.currentView.paramsChanged(match);
+                this.currentView.paramsChanged(params);
                 this.viewManager.changeView(this.currentView);
             }
         }
