@@ -146,7 +146,7 @@ mixes(SpookyRouter, {
                 var previousView = this.currentView;
                 this.currentView = View;
                 this.currentView.paramsChanged(match);
-                if (this.currentView != previousView){
+                if (this.currentView != previousView && !route.config.floatingView){
                     this.viewManager.changeView(this.currentView, false);
                 }
             } else {
