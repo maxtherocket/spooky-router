@@ -143,7 +143,7 @@ mixes(SpookyRouter, {
         if (route.config.view){
             var View = route.config.view;
             var configParams = route.config.params || {};
-            var params = _.assign(configParams, match);
+            var params = route.config.params = _.assign(configParams, match);
             if (View._spooky === true){
                 var previousView = this.currentView;
                 this.currentView = View;
