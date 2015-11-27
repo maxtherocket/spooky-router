@@ -136,7 +136,7 @@ mixes(SpookyRouter, {
             return;
         }
 
-        if (this.currentRoute.config.floatingView){
+        if (this.currentRoute && this.currentRoute.config && this.currentRoute.config.floatingView){
         	// TODO: Call a function on a floating view
         }
 
