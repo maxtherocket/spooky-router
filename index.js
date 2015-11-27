@@ -135,6 +135,27 @@ mixes(SpookyRouter, {
             this.currentView.paramsChanged(match);
             return;
         }
+
+        if (this.currentRoute.config.floatingView){
+        	// TODO: Call a function on a floating view
+        }
+
+        if (route == this.viewManagerCurrentRoute){
+        	// This would happen if we are returning from a floatingView route to a regular route
+
+        	this.lastRoute = this.currentRoute;
+        	this.currentRoute = route;
+
+        	var previousView = this.currentView;
+        	this.currentView = this.viewManager.currentView;
+            // The route is the same, meaning parameters have changed
+            this.currentView.paramsChanged(match);
+
+            this.onRouteChanged.dispatch(route, match);
+
+            return;
+        }
+
         // set current route
         this.lastRoute = this.currentRoute;
         this.currentRoute = route;
@@ -150,6 +171,8 @@ mixes(SpookyRouter, {
                 this.currentView.paramsChanged(params);
                 if (this.currentView != previousView && !route.config.floatingView){
                     this.viewManager.changeView(this.currentView, false);
+                    // Track the current route of the ViewManager to know which route the non-floating views are on
+                    this.viewManagerCurrentRoute = this.currentRoute;
                 }
             } else {
                 var data = model.getContent(route.name);
@@ -159,6 +182,8 @@ mixes(SpookyRouter, {
                 this.currentView.resize(this.width, this.height);
                 this.currentView.paramsChanged(params);
                 this.viewManager.changeView(this.currentView);
+                // Track the current route of the ViewManager to know which route the non-floating views are on
+                this.viewManagerCurrentRoute = this.currentRoute;
             }
         }
     },
