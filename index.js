@@ -132,6 +132,7 @@ mixes(SpookyRouter, {
     pathMatched: function(match, route){
         if (route == this.currentRoute){
             // The route is the same, meaning parameters have changed
+            route.config.params = match;
             this.currentView.paramsChanged(match);
             return;
         }
