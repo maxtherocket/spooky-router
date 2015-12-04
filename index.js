@@ -12,7 +12,7 @@ var SpookyRouter = function(){
     this.onRouteNotFound = new Signal();
     this.onRouteChanged = new Signal();
     this.onParamsChanged = new Signal();
-    
+
     this.width = 0;
     this.height = 0;
 
@@ -47,15 +47,18 @@ mixes(SpookyRouter, {
         }
 
         return this;
-        
+
     },
 
     add: function(name, pattern, config){
 
+        config = config || {};
+
         var route = {
             name: name,
             route: new Route(pattern),
-            config: config
+            config: config,
+            history: {}
         }
 
         this.routes[name] = route;
@@ -130,12 +133,20 @@ mixes(SpookyRouter, {
     },
 
     pathMatched: function(match, route){
+
+        var configParams = route.config.params || {};
+        var params = _.assign(configParams, match);
+
+        route.history.params = match;
+
         if (route == this.currentRoute){
             // The route is the same, meaning parameters have changed
-            route.config.params = match;
-            this.currentView.paramsChanged(match);
+            this.currentView.paramsChanged(params);
             return;
         }
+
+        // Update params
+        //route.config.params = match;
 
         if (this.currentRoute && this.currentRoute.config && this.currentRoute.config.floatingView){
         	// TODO: Call a function on a floating view
@@ -149,23 +160,22 @@ mixes(SpookyRouter, {
 
         	var previousView = this.currentView;
         	this.currentView = this.viewManager.currentView;
-            // The route is the same, meaning parameters have changed
-            this.currentView.paramsChanged(match);
 
-            this.onRouteChanged.dispatch(route, match);
+          // The route is the same, meaning parameters have changed
+          this.currentView.paramsChanged(params);
 
-            return;
+          this.onRouteChanged.dispatch(route, params);
+
+          return;
         }
 
         // set current route
         this.lastRoute = this.currentRoute;
         this.currentRoute = route;
-        this.onRouteChanged.dispatch(route, match);
+        this.onRouteChanged.dispatch(route, params);
         // Change view
         if (route.config.view){
             var View = route.config.view;
-            var configParams = route.config.params || {};
-            var params = route.config.params = _.assign(configParams, match);
             if (View._spooky === true){
                 var previousView = this.currentView;
                 this.currentView = View;
