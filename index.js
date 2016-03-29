@@ -1,6 +1,6 @@
 var mixes = require('mixes');
 var _ = require('lodash');
-var on = require('dom-event');
+var on = require('dom-events');
 var ViewManager = require('spooky-view-manager');
 var Route = require('route-parser');
 var Signal = require('signals').Signal;
