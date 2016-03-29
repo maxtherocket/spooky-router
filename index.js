@@ -28,6 +28,8 @@ mixes(SpookyRouter, {
         this.width = width;
         this.height = height;
 
+        this.goCallback = null;
+
         this.viewManager = new ViewManager(container, overlapViews);
 
         this.updateURL = true;
@@ -87,13 +89,17 @@ mixes(SpookyRouter, {
         window.location.hash = "!" + path;
     },
 
-    go: function(name, params, updateURL){
+    go: function(name, params, updateURL, goCallback){
         // if updateURL is not defined, use router
         if (_.isUndefined(updateURL)){
             updateURL = this.updateURL;
         }
         var path = this.generatePath(name, params);
-        if (!path) return;
+        if (!path){
+        	if (goCallback) goCallback();
+        	return;
+        }
+        this.goCallback = goCallback || null;
         // Check if route parameters have an updateURL property
         var route = this.routes[name];
         if (route && route.config && route.config.updateURL === false){
@@ -132,6 +138,13 @@ mixes(SpookyRouter, {
         }
     },
 
+    _callGoCallback: function(param){
+    	if (this.goCallback){
+    		this.goCallback(param);
+    		this.goCallback = null;
+    	}
+    },
+
     pathMatched: function(match, route){
 
         var configParams = route.config.params || {};
@@ -141,7 +154,7 @@ mixes(SpookyRouter, {
 
         if (route == this.currentRoute){
             // The route is the same, meaning parameters have changed
-            this.currentView.paramsChanged(params);
+            this._callGoCallback( this.currentView.paramsChanged(params) );
             return;
         }
 
@@ -153,20 +166,20 @@ mixes(SpookyRouter, {
         }
 
         if (route == this.viewManagerCurrentRoute){
-        	// This would happen if we are returning from a floatingView route to a regular route
+			// This would happen if we are returning from a floatingView route to a regular route
 
-        	this.lastRoute = this.currentRoute;
-        	this.currentRoute = route;
+			this.lastRoute = this.currentRoute;
+			this.currentRoute = route;
 
-        	var previousView = this.currentView;
-        	this.currentView = this.viewManager.currentView;
+			var previousView = this.currentView;
+			this.currentView = this.viewManager.currentView;
 
-          // The route is the same, meaning parameters have changed
-          this.currentView.paramsChanged(params);
+			// The route is the same, meaning parameters have changed
+			this._callGoCallback( this.currentView.paramsChanged(params) );
 
-          this.onRouteChanged.dispatch(route, params);
-
-          return;
+			this.onRouteChanged.dispatch(route, params);
+			
+			return;
         }
 
         // set current route
@@ -179,20 +192,21 @@ mixes(SpookyRouter, {
             if (View._spooky === true){
                 var previousView = this.currentView;
                 this.currentView = View;
-                this.currentView.paramsChanged(params);
                 if (this.currentView != previousView && !route.config.floatingView){
-                    this.viewManager.changeView(this.currentView, false);
+                    this._callGoCallback( this.viewManager.changeView(this.currentView, false) );
                     // Track the current route of the ViewManager to know which route the non-floating views are on
                     this.viewManagerCurrentRoute = this.currentRoute;
+                } else {
+					this._callGoCallback( this.currentView.paramsChanged(params) );
                 }
             } else {
                 var data = model.getContent(route.name);
                 data = data || {};
                 data = _.assign(data, route.config.data);
-                this.currentView = new View(data);
+                this._callGoCallback( this.currentView = new View(data) );
                 this.currentView.resize(this.width, this.height);
                 this.currentView.paramsChanged(params);
-                this.viewManager.changeView(this.currentView);
+                 this.viewManager.changeView(this.currentView) );
                 // Track the current route of the ViewManager to know which route the non-floating views are on
                 this.viewManagerCurrentRoute = this.currentRoute;
             }

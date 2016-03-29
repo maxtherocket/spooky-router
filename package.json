@@ -20,7 +20,7 @@
     "extend": "~2.0.0",
     "lodash": "~2.4.1",
     "mixes": "~1.0.4",
-    "dom-event": "0.0.1",
+    "dom-events": "~0.1.1",
     "spooky-view-manager": "^1.0.0",
     "urlresolve": "0.0.6",
     "route-parser": "0.0.2",
