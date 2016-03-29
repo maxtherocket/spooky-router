@@ -1,5 +1,7 @@
 var mixes = require('mixes');
-var _ = require('lodash');
+var isUndefined = require('is-undefined');
+var isFunction = require('is-function');
+var _assign = require('lodash.assign');
 var on = require('dom-events').on;
 var ViewManager = require('spooky-view-manager');
 var Route = require('route-parser');
@@ -33,7 +35,7 @@ mixes(SpookyRouter, {
         this.updateURL = true;
 
         // init routes
-        if (initRoutes && _.isFunction(initRoutes)){
+        if (initRoutes && isFunction(initRoutes)){
             initRoutes.call(this);
         }
 
@@ -89,7 +91,7 @@ mixes(SpookyRouter, {
 
     go: function(name, params, updateURL){
         // if updateURL is not defined, use router
-        if (_.isUndefined(updateURL)){
+        if (isUndefined(updateURL)){
             updateURL = this.updateURL;
         }
         var path = this.generatePath(name, params);
@@ -118,14 +120,15 @@ mixes(SpookyRouter, {
 
     matchPath: function(path){
         var matched = false;
-        _.each(this.routes, function(route, index){
+        for (var routeKey in this.routes){
+        	var route = this.routes[routeKey];
             var match = route.route.match(path);
             if (match){
                 matched = true;
                 this.pathMatched(match, route);
                 return false;
             }
-        }.bind(this));
+        }
         // No match
         if (!matched){
             this.onRouteNotFound.dispatch(path);
@@ -135,13 +138,13 @@ mixes(SpookyRouter, {
     pathMatched: function(match, route){
 
         var configParams = route.config.params || {};
-        var params = _.assign(configParams, match);
+        var params = _assign(configParams, match);
 
         route.history.params = match;
 
         if (route == this.currentRoute){
             // The route is the same, meaning parameters have changed
-            this.currentView.paramsChanged(params);
+            if (isFunction(this.currentView.paramsChanged)) this.currentView.paramsChanged(params);
             return;
         }
 
@@ -162,7 +165,7 @@ mixes(SpookyRouter, {
         	this.currentView = this.viewManager.currentView;
 
           // The route is the same, meaning parameters have changed
-          this.currentView.paramsChanged(params);
+          if (isFunction(this.currentView.paramsChanged)) this.currentView.paramsChanged(params);
 
           this.onRouteChanged.dispatch(route, params);
 
@@ -179,7 +182,7 @@ mixes(SpookyRouter, {
             if (View._spooky === true){
                 var previousView = this.currentView;
                 this.currentView = View;
-                this.currentView.paramsChanged(params);
+                if (isFunction(this.currentView.paramsChanged)) this.currentView.paramsChanged(params);
                 if (this.currentView != previousView && !route.config.floatingView){
                     this.viewManager.changeView(this.currentView, false);
                     // Track the current route of the ViewManager to know which route the non-floating views are on
@@ -188,10 +191,10 @@ mixes(SpookyRouter, {
             } else {
                 var data = model.getContent(route.name);
                 data = data || {};
-                data = _.assign(data, route.config.data);
+                data = _assign(data, route.config.data);
                 this.currentView = new View(data);
                 this.currentView.resize(this.width, this.height);
-                this.currentView.paramsChanged(params);
+                if (isFunction(this.currentView.paramsChanged)) this.currentView.paramsChanged(params);
                 this.viewManager.changeView(this.currentView);
                 // Track the current route of the ViewManager to know which route the non-floating views are on
                 this.viewManagerCurrentRoute = this.currentRoute;
