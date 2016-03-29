@@ -179,7 +179,7 @@ mixes(SpookyRouter, {
         // Change view
         if (route.config.view){
             var View = route.config.view;
-            if (View._spooky === true){
+            if (View instanceof SpookyElement && View._isSpookyElement === true){
                 var previousView = this.currentView;
                 this.currentView = View;
                 if (isFunction(this.currentView.paramsChanged)) this.currentView.paramsChanged(params);
