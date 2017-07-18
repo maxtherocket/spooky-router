@@ -1,4 +1,5 @@
 var SpookyEl = require('spooky-element');
+var router = require('../..');
 
 class Spooky extends SpookyEl {
 
