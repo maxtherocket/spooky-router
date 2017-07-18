@@ -8,7 +8,7 @@ var Route = require('route-parser');
 var Signal = require('signals').Signal;
 var model = require('spooky-model');
 var SpookyElement = require('spooky-element');
-import createHistory from 'history/createBrowserHistory';
+var createHistory = require('history').createBrowserHistory
 
 var SpookyRouter = function() {
     this.onRouteNotFound = new Signal();
